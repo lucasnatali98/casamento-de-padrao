@@ -3,7 +3,12 @@
 #include <iostream>
 #include <cstring>
 
+typedef struct ocorrencias{
+    int numArquivo;
+    int posicao;
+}Ocorrencia ;
+
 using namespace std;
 
-void forcaBruta(char*, long n, char[], long m);
+void forcaBruta(char*, long n, char[], long m, Ocorrencia*, int* posnovetor, int file);
 #endif // FORCABRUTA_H
