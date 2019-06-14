@@ -1,7 +1,7 @@
 #include "forcabruta.h"
 
 
-void forcaBruta(char *texto, long n, char padrao[], long m)
+void forcaBruta(char *texto, long n, char padrao[], long m, Ocorrencia* o, int* posnovetor, int file)
 {
     //m = tamanho do padrão
     //n = tamanho do texto
@@ -20,7 +20,11 @@ void forcaBruta(char *texto, long n, char padrao[], long m)
             k++;
 
         }
-        if(j > m) cout<<"Casamento na posicao: "<<k<<endl;
+        if(j > m){
+            o[*posnovetor].posicao = i;
+            o[*posnovetor].numArquivo = file;
+            *posnovetor += 1;
+        }
     }
 
 }
