@@ -2,6 +2,7 @@
 #include <cstring>
 #include <string>
 #include "forcabruta.h"
+#include "arvorebinaria.h"
 
 using namespace std;
 
@@ -20,15 +21,15 @@ int main(int argc, char *argv[])
     TipoExecucao execucao;
     if(argc < 3 || argc > 4)
     {
-        cout<<"Quantidade de argumentos errada, tente novamente \n";
+        cout<<" \n Quantidade de argumentos errada, tente novamente \n";
         exit(1);
     }
 
-    execucao.metodo = atoi(argv[1]); cout<<"Metodo: "<<execucao.metodo<<endl;
+    execucao.metodo = atoi(argv[1]); cout<<"\n Metodo: "<<execucao.metodo<<endl;
 
     if(argc == 3) {
        strcpy(execucao.padrao, argv[2]);
-       cout << " Padrao c 2 param: " << execucao.padrao << endl;
+       cout << "\n -> Padrao: " << execucao.padrao << endl;
     }
 
     FILE* colecao; // Arquivo atualmente aberto.
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
         fscanf(filenames, "%s", nomes[i]);
     }
     fclose(filenames);
+    Celula* arvore = nullptr;
 
     Ocorrencia* ocorrencias = new Ocorrencia[100000]; // Guarda todas as ocorrências da palavra pesquisada.
     int posnovetor = 0; // Quantas ocorrências foram encontradas.
@@ -49,6 +51,15 @@ int main(int argc, char *argv[])
     case 1:
         cout << "\n __________________________________________________________";
         cout << "\n Arquivo Invertido \n" << endl;
+        Inicializa(arvore);
+        arvore = insere(arvore, "nada");
+        insere(arvore, "ronaldo");
+        insere(arvore, "coisa");
+        insere(arvore, "pipa");
+        insere(arvore, "coisa");
+        pesquisa(arvore, "ronaldo");
+        imprime(arvore);
+        deletaTudo(arvore);
         break;
     case 2:
         cout << "\n __________________________________________________________";
@@ -73,6 +84,7 @@ int main(int argc, char *argv[])
         for (int i = 0; i < posnovetor; ++i) {
             cout << " Arquivo: " << ocorrencias[i].numArquivo << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
         }
+        cout << "\n Total de ocorrencias: " << posnovetor << endl;
         break;
     default:
         exit(1);
