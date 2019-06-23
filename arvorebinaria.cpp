@@ -36,9 +36,15 @@ Celula *insere(Celula *cel, char *chave)
 
 Celula *pesquisa(Celula *cel, char *chave)
 {
-    if(cel == nullptr) return nullptr;
-    if(strcmp(cel->nome, chave) == 0) return cel; // strings iguais
-
+    if(cel == nullptr)
+    {
+        cout<<"nao tem nada uhu"<<endl;
+        return nullptr;
+    }
+    if(strcmp(cel->nome, chave) == 0){
+     cout<<cel->nome<<" | ";
+     return cel; // strings iguais
+    }
     if(strcmp(chave, cel->nome) < 0) return pesquisa(cel->esquerda, chave); // caractere que difere é menor em chave.
     if(strcmp(chave, cel->nome) > 0) return pesquisa(cel->direita, chave); // caractere que difere é maior em chave.
 

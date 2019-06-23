@@ -1,7 +1,7 @@
 #include "forcabruta.h"
 
 
-void forcaBruta(char *texto, long n, char padrao[], long m, Ocorrencia* o, int* posnovetor, int file)
+void forcaBruta(char *texto, long n, char padrao[], long m, Ocorrencia* o, int* posnovetor, int file, int *comparacoes)
 {
     //m = tamanho do padrão
     //n = tamanho do texto
@@ -15,9 +15,11 @@ void forcaBruta(char *texto, long n, char padrao[], long m, Ocorrencia* o, int* 
         j=1;
         while(texto[k-1] == padrao[j-1] && j<=m)
         {
+            (*comparacoes)++;
 
             j++;
             k++;
+
 
         }
         if(j > m){

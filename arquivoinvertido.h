@@ -4,6 +4,6 @@
 #include "arvorebinaria.h"
 #include "forcabruta.h"
 
-short geraArquivoInvertido();
+short geraArquivoInvertido(FILE*);
 
 #endif // ARQUIVOINVERTIDO_H
