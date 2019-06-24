@@ -9,9 +9,10 @@
 
 #include "forcabruta.h"
 #include "arvorebinaria.h"
+#include "arquivoinvertido.h"
 
 using namespace std;
-using namespace std::chrono;
+
 
 typedef struct execucao
 {
@@ -24,7 +25,7 @@ const long qtdarquivos = 1000;
 
 int main(int argc, char *argv[])
 {
-
+    using namespace std::chrono;
     TipoExecucao execucao;
     if(argc < 3 || argc > 4)
     {
@@ -44,6 +45,12 @@ int main(int argc, char *argv[])
     char* texto = new char[1000000]; // Guarda o conteúdo de cada arquivo.
 
     char** nomes = new char*[qtdarquivos]; // Os nomes dos arquivos.
+    char vocabulario[100000][20];
+
+    criaNomesVocabulario(vocabulario, 1);
+    cout<<"Passou do cria Nomes"<<endl;
+    cout<<"Vocabulario: "<<vocabulario[0]<<endl;
+
     for (int i = 0; i < qtdarquivos; ++i) {
         nomes[i] = new char[9];
         fscanf(filenames, "%s", nomes[i]);
@@ -60,8 +67,10 @@ int main(int argc, char *argv[])
      clock_t tempoInicial;
      clock_t tempoFinal;
      int comparacoes=0;
-
-
+     high_resolution_clock::time_point t1;
+    high_resolution_clock::time_point t2;
+    FILE* ocorrenciasVocubulario;
+    duration<double> total_time;
     char *aux = new char[100000];
     switch (execucao.metodo) {
     case 1:
@@ -77,6 +86,45 @@ int main(int argc, char *argv[])
 
         imprime(arvore);
         cout<<endl<<endl;
+        char palavra[26];
+
+        for (int i = 0;  i< 1; i++) {
+            colecao = fopen(nomes[i],"r"); //abre as coleções de machado
+            int lido=0, quantidade=0;
+            int contador = 0; //Responsável
+            while((lido = getc(colecao))!=EOF)
+            {
+
+                texto[quantidade] = static_cast<char>(lido);
+                while(texto[quantidade] != ' ' || texto[quantidade] != '?' || texto[quantidade] != '!'
+                        || texto[quantidade] != '-' || texto[quantidade] != ',')
+                {
+                       palavra[quantidade] = texto[quantidade]; // Recebe a palavra lida
+
+                }
+
+
+
+                    if(pesquisa(arvore,palavra) == nullptr)
+                    {
+                        insere(arvore,palavra);
+                        ocorrenciasVocubulario = fopen(vocabulario[i], "w+b");
+                        fprintf(ocorrenciasVocubulario, "%s", palavra, quantidade);
+
+
+                    }
+                    else
+                    {
+                      ocorrenciasVocubulario = fopen(vocabulario[i], "a+");
+
+
+                    }
+
+
+
+                quantidade++;
+            }
+        }
 
 
          //for (int i = 0; i < qtdarquivos; i++){
@@ -89,7 +137,7 @@ int main(int argc, char *argv[])
         cout << "\n __________________________________________________________";
         cout << "\n Forca Bruta \n" << endl;
         tempoInicial = clock();
-
+        t1 = high_resolution_clock::now();
         for (int i = 0; i < qtdarquivos; ++i) {
             colecao = fopen(nomes[i], "r");
             int lido, qtd = 0; // qtd: define a quantidade de caracteres do texto. lido: caractere que foi lido.
@@ -106,9 +154,10 @@ int main(int argc, char *argv[])
 
         }
         tempoFinal = clock();
+        t2 = high_resolution_clock::now();
+        total_time = duration_cast<duration<double>>(t2-t1);
 
-        tempoTotal = tempoFinal - tempoInicial;
-        cout<<"Tempo total: "<<((static_cast<double>(tempoTotal))/CLOCKS_PER_SEC)<<" segundos"<<endl;
+        cout<<"Tempo total : "<<total_time.count()<<endl;
         cout<<"Quantidade de comparacoes: "<<comparacoes<<endl;
 
         cout << "\n Ocorrencias: " << endl << endl;

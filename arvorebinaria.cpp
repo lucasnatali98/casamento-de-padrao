@@ -4,6 +4,7 @@ using namespace std;
 
 struct celula{
     char nome[30];
+
     Celula* esquerda = nullptr;
     Celula* direita = nullptr;
 };
