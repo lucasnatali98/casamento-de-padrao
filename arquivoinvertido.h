@@ -6,5 +6,7 @@
 
 void criaNomesVocabulario(char vocabulario[100000][20], int posicao);
 short geraArquivoInvertido(FILE*);
+short criaArquivoInvertidoPalavra(FILE*);
+short adicionaOcorrencias(FILE*);
 
 #endif // ARQUIVOINVERTIDO_H

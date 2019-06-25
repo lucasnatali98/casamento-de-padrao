@@ -6,7 +6,7 @@
 typedef struct celula Celula;
 
 void Inicializa(Celula*);
-Celula* criaCelula(char*);
+Celula* criaCelula(char*, char*);
 Celula* insere(Celula*, char*);
 Celula* pesquisa(Celula*, char*);
 void imprime(Celula*);

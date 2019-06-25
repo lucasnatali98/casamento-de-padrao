@@ -44,13 +44,22 @@ int main(int argc, char *argv[])
     FILE* filenames = fopen("nomes.txt", "r"); // Abre arquivo que tem a lista de nomes.
     char* texto = new char[1000000]; // Guarda o conteúdo de cada arquivo.
 
+
+    int linha = 100000;
+    int coluna = 20;
     char** nomes = new char*[qtdarquivos]; // Os nomes dos arquivos.
     char vocabulario[100000][20];
 
-    criaNomesVocabulario(vocabulario, 1);
+    criaNomesVocabulario(vocabulario, 10);
     cout<<"Passou do cria Nomes"<<endl;
-    cout<<"Vocabulario: "<<vocabulario[0]<<endl;
-
+    /*
+    for (int i = 0; i < linha; ++i) {
+        cout<<endl;
+        for (int j = 0; j < coluna; ++j) {
+            cout<<vocabulario[i][j]<<" | ";
+        }
+    }
+    */
     for (int i = 0; i < qtdarquivos; ++i) {
         nomes[i] = new char[9];
         fscanf(filenames, "%s", nomes[i]);
@@ -58,79 +67,91 @@ int main(int argc, char *argv[])
 
     fclose(filenames);
     Celula* arvore = nullptr;
-    char* flag;
-    double tempoTotal;
+
     Ocorrencia* ocorrencias = new Ocorrencia[100000]; // Guarda todas as ocorrências da palavra pesquisada.
     int posnovetor = 0; // Quantas ocorrências foram encontradas.
 
 
      clock_t tempoInicial;
      clock_t tempoFinal;
+
      int comparacoes=0;
-     high_resolution_clock::time_point t1;
+
+    high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
     FILE* ocorrenciasVocubulario;
     duration<double> total_time;
+
     char *aux = new char[100000];
     switch (execucao.metodo) {
     case 1:
         cout << "\n __________________________________________________________";
         cout << "\n Arquivo Invertido \n" << endl;
         Inicializa(arvore);
-        arvore = insere(arvore, "nada");
-        insere(arvore, "ronaldo");
-        insere(arvore, "coisa");
-        insere(arvore, "pipa");
-        insere(arvore, "xinelo");
-        pesquisa(arvore, execucao.padrao);
+   //     arvore = insere(arvore, "nada");
+     //   insere(arvore, "ronaldo");
+      //  insere(arvore, "coisa");
+      //  insere(arvore, "pipa");
+     //   insere(arvore, "xinelo");
+     //   pesquisa(arvore, execucao.padrao);
 
-        imprime(arvore);
+     //   imprime(arvore);
         cout<<endl<<endl;
         char palavra[26];
+        char referencia[30];
+        char espacoVazio;
 
-        for (int i = 0;  i< 1; i++) {
-            colecao = fopen(nomes[i],"r"); //abre as coleções de machado
-            int lido=0, quantidade=0;
-            int contador = 0; //Responsável
-            while((lido = getc(colecao))!=EOF)
+        for (int i = 0; i < qtdarquivos; ++i) {
+            colecao = fopen(nomes[i], "r"); //Um arquivo por iteração
+            int lido = 0;  int quantidade = 0;
+            while ((lido = getc(colecao)) != EOF)
             {
-
                 texto[quantidade] = static_cast<char>(lido);
-                while(texto[quantidade] != ' ' || texto[quantidade] != '?' || texto[quantidade] != '!'
-                        || texto[quantidade] != '-' || texto[quantidade] != ',')
+                while(texto[quantidade] != '.' || texto[quantidade] != ',' || texto[quantidade] != '!'
+                      || texto[quantidade] != ';' || texto[quantidade] != '-' || texto[quantidade] != '?'
+                        || texto[quantidade] != '"' || texto[quantidade] != ':')
                 {
-                       palavra[quantidade] = texto[quantidade]; // Recebe a palavra lida
+                    quantidade++;
+                }
+                cout<<"O valor de quantidade: "<<quantidade<<endl;
+                strcpy(palavra,texto); // Passando conteúdo do texto para
+                cout<<"Palavra: "<<palavra<<endl;
 
+                if(pesquisa(arvore, palavra) == nullptr) //Palavra ainda não está na arvore
+                {
+                    strcpy(referencia, vocabulario[quantidade]);
+                    cout<<"Referencia(nome do arquivo)"<<referencia<<endl;
+                    insere(arvore, palavra, referencia);
+                    criaArquivoInvertidoPalavra(); // Abre e grava as ocorrencias
+
+                }
+                else{ // Já existe o registro na árvore
+                    adicionaOcorrencias();
                 }
 
 
-
-                    if(pesquisa(arvore,palavra) == nullptr)
+                if(texto[quantidade] == '.' || texto[quantidade] == ',' || texto[quantidade] == '!'
+                        || texto[quantidade] == ';' || texto[quantidade] == '-' || texto[quantidade] == '?'
+                          || texto[quantidade] == '"' || texto[quantidade] == ':')
+                {
+                    espacoVazio = ' ';
+                    if(pesquisa(arvore,&espacoVazio)==nullptr)
                     {
-                        insere(arvore,palavra);
-                        ocorrenciasVocubulario = fopen(vocabulario[i], "w+b");
-                        fprintf(ocorrenciasVocubulario, "%s", palavra, quantidade);
-
+                        strcpy(referencia, vocabulario[quantidade]);
+                        insere(arvore,&espacoVazio,referencia);
+                        criaArquivoInvertidoPalavra(colecao,);
 
                     }
-                    else
-                    {
-                      ocorrenciasVocubulario = fopen(vocabulario[i], "a+");
-
-
+                    else {
+                        adicionaOcorrencias();
                     }
+                    quantidade++;
+                }
 
-
-
-                quantidade++;
             }
+
         }
 
-
-         //for (int i = 0; i < qtdarquivos; i++){
-           // colecao = fopen(nomes[i], "r");
-            //while(fscanf(colecao,"%[A-Za-z]"))
-        //}
         deletaTudo(arvore);
         break;
     case 2:
