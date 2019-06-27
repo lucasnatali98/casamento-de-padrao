@@ -70,9 +70,10 @@ int main(int argc, char *argv[])
     Celula* arvore = nullptr;
   //  Celula* aux = nullptr;
 
-    ListaEncadeada *lista = criaListaVazia();
+
 
     Ocorrencia* ocorrencias = new Ocorrencia[1000000]; // Guarda todas as ocorrências da palavra pesquisada.
+    Ocorrencia* ocorrencias2 = new Ocorrencia[1000000];
     int posnovetor = 0; // Quantas ocorrências foram encontradas.
 
     int comparacoes=0;
@@ -98,7 +99,7 @@ int main(int argc, char *argv[])
         char espacoVazio;
         int auxVocabulario;
 
-        for (int i = 0; i < qtdarquivos/100; ++i) {
+        for (int i = 0; i < qtdarquivos/250; ++i) {
             colecao = fopen(nomes[i], "r"); //Um arquivo por iteração
             auxVocabulario = 0;
             int lido = 0;  int quantidade = 0, flag=0;
@@ -140,17 +141,11 @@ int main(int argc, char *argv[])
                 forcaBruta(texto,quantidade,palavra,static_cast<long>(strlen(palavra)), ocorrencias, &posnovetor,
                            i+1, &comparacoes);
 
-                cout << "\n Ocorrencias: " << endl << endl;
-                for (int i = 0; i < posnovetor; ++i) {
-                    cout << " Arquivo: " << ocorrencias[i].numArquivo
-                         << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
-                  //  fprintf(ocorrenciasVocubulario, "%d %d\n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
-                }
-                auxVocabulario++;
-                //cout<<"AuxVocabulario: "<<auxVocabulario<<endl;
-                //fclose(ocorrenciasVocubulario);
 
-            }
+                  //  fprintf(ocorrenciasVocubulario, "%d %d\n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
+              }
+
+                //fclose(ocorrenciasVocubulario);
             else
             { // Já existe o registro na árvore
                 cout<<"Ja existe a palavra na árvore"<<endl;
@@ -158,12 +153,7 @@ int main(int argc, char *argv[])
                 forcaBruta(texto,quantidade,palavra,static_cast<long>(strlen(palavra)), ocorrencias, &posnovetor,
                            i+1, &comparacoes);
 
-                cout << "\n Ocorrencias: " << endl << endl;
-                for (int i = 0; i < posnovetor; ++i) {
-                    cout << " Arquivo: " << ocorrencias[i].numArquivo
-                         << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
-                    //fprintf(ocorrenciasVocubulario, "%s %d \n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
-                }
+
 
                 //fclose(ocorrenciasVocubulario);
             }
@@ -183,12 +173,9 @@ int main(int argc, char *argv[])
                     forcaBruta(texto,quantidade,palavra,static_cast<long>(strlen(palavra)), ocorrencias, &posnovetor,
                                i+1, &comparacoes);
 
-                    cout << "\n Ocorrencias: " << endl << endl;
-                    for (int i = 0; i < posnovetor; ++i) {
-                        cout << " Arquivo: " << ocorrencias[i].numArquivo
-                             << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
+
                         //fprintf(ocorrenciasVocubulario, "%d %d\n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
-                    }
+
                     //fclose(ocorrenciasVocubulario);
 
 
@@ -196,6 +183,12 @@ int main(int argc, char *argv[])
             }
             flag++;
 
+
+        }
+        cout << "\n Ocorrencias: " << endl << endl;
+        for (int i = 0; i < posnovetor; ++i) {
+            cout << " Arquivo: " << ocorrencias[i].numArquivo
+                 << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
         }
 
 
@@ -207,7 +200,7 @@ int main(int argc, char *argv[])
         cout << "\n Forca Bruta \n" << endl;
 
         t1 = high_resolution_clock::now();
-        for (int i = 0; i < qtdarquivos/100; ++i) {
+        for (int i = 0; i < 4; ++i) {
             colecao = fopen(nomes[i], "r");
             int lido=0;
             int qtd =0;// qtd: define a quantidade de caracteres do texto. lido: caractere que foi lido.
