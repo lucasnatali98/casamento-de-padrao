@@ -18,7 +18,8 @@ SOURCES += \
     arquivoinvertido.cpp \
     arvorebinaria.cpp \
         main.cpp \
-    forcabruta.cpp
+    forcabruta.cpp \
+    listaencadeada.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -28,4 +29,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     arquivoinvertido.h \
     arvorebinaria.h \
-    forcabruta.h
+    forcabruta.h \
+    listaencadeada.h

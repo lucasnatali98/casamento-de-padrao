@@ -10,7 +10,7 @@
 #include "forcabruta.h"
 #include "arvorebinaria.h"
 #include "arquivoinvertido.h"
-
+#include "listaencadeada.h"
 using namespace std;
 
 
@@ -26,6 +26,7 @@ const long qtdarquivos = 1000;
 int main(int argc, char *argv[])
 {
     using namespace std::chrono;
+
     TipoExecucao execucao;
     if(argc < 3 || argc > 4)
     {
@@ -52,14 +53,14 @@ int main(int argc, char *argv[])
 
     criaNomesVocabulario(vocabulario, 10);
     cout<<"Passou do cria Nomes"<<endl;
-    /*
-    for (int i = 0; i < linha; ++i) {
+
+    for (int i = 0; i < 10; ++i) {
         cout<<endl;
         for (int j = 0; j < coluna; ++j) {
             cout<<vocabulario[i][j]<<" | ";
         }
     }
-    */
+
     for (int i = 0; i < qtdarquivos; ++i) {
         nomes[i] = new char[9];
         fscanf(filenames, "%s", nomes[i]);
@@ -67,106 +68,156 @@ int main(int argc, char *argv[])
 
     fclose(filenames);
     Celula* arvore = nullptr;
+  //  Celula* aux = nullptr;
 
-    Ocorrencia* ocorrencias = new Ocorrencia[100000]; // Guarda todas as ocorrências da palavra pesquisada.
+    ListaEncadeada *lista = criaListaVazia();
+
+    Ocorrencia* ocorrencias = new Ocorrencia[1000000]; // Guarda todas as ocorrências da palavra pesquisada.
     int posnovetor = 0; // Quantas ocorrências foram encontradas.
 
-
-     clock_t tempoInicial;
-     clock_t tempoFinal;
-
-     int comparacoes=0;
+    int comparacoes=0;
 
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
-    FILE* ocorrenciasVocubulario;
+    //FILE* ocorrenciasVocubulario;
     duration<double> total_time;
 
-    char *aux = new char[100000];
+
+    //char *aux = new char[100000];
     switch (execucao.metodo) {
     case 1:
         cout << "\n __________________________________________________________";
         cout << "\n Arquivo Invertido \n" << endl;
+
+
         Inicializa(arvore);
-   //     arvore = insere(arvore, "nada");
-     //   insere(arvore, "ronaldo");
-      //  insere(arvore, "coisa");
-      //  insere(arvore, "pipa");
-     //   insere(arvore, "xinelo");
-     //   pesquisa(arvore, execucao.padrao);
+        cout<<endl<<endl<<endl;
 
-     //   imprime(arvore);
-        cout<<endl<<endl;
         char palavra[26];
-        char referencia[30];
+        //char referencia[30];
         char espacoVazio;
+        int auxVocabulario;
 
-        for (int i = 0; i < qtdarquivos; ++i) {
+        for (int i = 0; i < qtdarquivos/100; ++i) {
             colecao = fopen(nomes[i], "r"); //Um arquivo por iteração
-            int lido = 0;  int quantidade = 0;
+            auxVocabulario = 0;
+            int lido = 0;  int quantidade = 0, flag=0;
             while ((lido = getc(colecao)) != EOF)
             {
+                //Passando os conteúdos dos arquivos para a memória principal
                 texto[quantidade] = static_cast<char>(lido);
-                while(texto[quantidade] != '.' || texto[quantidade] != ',' || texto[quantidade] != '!'
-                      || texto[quantidade] != ';' || texto[quantidade] != '-' || texto[quantidade] != '?'
-                        || texto[quantidade] != '"' || texto[quantidade] != ':')
-                {
-                    quantidade++;
-                }
-                cout<<"O valor de quantidade: "<<quantidade<<endl;
-                strcpy(palavra,texto); // Passando conteúdo do texto para
-                cout<<"Palavra: "<<palavra<<endl;
-
-                if(pesquisa(arvore, palavra) == nullptr) //Palavra ainda não está na arvore
-                {
-                    strcpy(referencia, vocabulario[quantidade]);
-                    cout<<"Referencia(nome do arquivo)"<<referencia<<endl;
-                    insere(arvore, palavra, referencia);
-                    criaArquivoInvertidoPalavra(); // Abre e grava as ocorrencias
-
-                }
-                else{ // Já existe o registro na árvore
-                    adicionaOcorrencias();
-                }
-
-
-                if(texto[quantidade] == '.' || texto[quantidade] == ',' || texto[quantidade] == '!'
-                        || texto[quantidade] == ';' || texto[quantidade] == '-' || texto[quantidade] == '?'
-                          || texto[quantidade] == '"' || texto[quantidade] == ':')
-                {
-                    espacoVazio = ' ';
-                    if(pesquisa(arvore,&espacoVazio)==nullptr)
-                    {
-                        strcpy(referencia, vocabulario[quantidade]);
-                        insere(arvore,&espacoVazio,referencia);
-                        criaArquivoInvertidoPalavra(colecao,);
-
-                    }
-                    else {
-                        adicionaOcorrencias();
-                    }
-                    quantidade++;
-                }
-
+                quantidade++;
             }
 
+
+            cout<<"Quantidade apos insercao no texto: "<<quantidade<<endl;
+            //quantidade = 0;
+
+            cout<<endl;
+            cout<<"Quantidade antes do while: "<<quantidade<<endl;
+
+            while(texto[flag] > 96 && texto[flag] < 123) // caracteres não especiais
+            {
+                palavra[flag] = texto[flag];
+                flag++;
+            }
+
+            cout<<"O valor de quantidade: "<<flag<<endl;
+            //strcpy(palavra,texto); // Passando conteúdo do texto para
+            cout<<"Palavra: "<<palavra<<endl;
+
+            if(pesquisa(arvore, palavra) == nullptr) //Palavra ainda não está na arvore
+            {
+                arvore = insere(arvore, palavra);
+                imprime(arvore);
+                cout<<endl;
+                //if((ocorrenciasVocubulario = fopen(vocabulario[auxVocabulario], "w+")) == nullptr)
+              //  {
+                //    exit(1);
+              //  }
+
+                //Chamaremos a força bruta para buscar todas as ocorrencias da palavra
+                forcaBruta(texto,quantidade,palavra,static_cast<long>(strlen(palavra)), ocorrencias, &posnovetor,
+                           i+1, &comparacoes);
+
+                cout << "\n Ocorrencias: " << endl << endl;
+                for (int i = 0; i < posnovetor; ++i) {
+                    cout << " Arquivo: " << ocorrencias[i].numArquivo
+                         << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
+                  //  fprintf(ocorrenciasVocubulario, "%d %d\n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
+                }
+                auxVocabulario++;
+                //cout<<"AuxVocabulario: "<<auxVocabulario<<endl;
+                //fclose(ocorrenciasVocubulario);
+
+            }
+            else
+            { // Já existe o registro na árvore
+                cout<<"Ja existe a palavra na árvore"<<endl;
+                //ocorrenciasVocubulario = fopen(vocabulario[auxVocabulario], "a+");
+                forcaBruta(texto,quantidade,palavra,static_cast<long>(strlen(palavra)), ocorrencias, &posnovetor,
+                           i+1, &comparacoes);
+
+                cout << "\n Ocorrencias: " << endl << endl;
+                for (int i = 0; i < posnovetor; ++i) {
+                    cout << " Arquivo: " << ocorrencias[i].numArquivo
+                         << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
+                    //fprintf(ocorrenciasVocubulario, "%s %d \n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
+                }
+
+                //fclose(ocorrenciasVocubulario);
+            }
+
+
+            flag++;
+            cout<<"Quantidade (Comparacao caracteres): "<<quantidade<<endl;
+            if((texto[flag] > 32 && texto[flag] < 48) && (texto[flag] > 57 && texto[flag] < 65))
+            {
+                espacoVazio = ' ';
+                if(pesquisa(arvore,&espacoVazio)==nullptr)
+                {
+                    //strcpy(referencia, vocabulario[quantidade]);
+                    insere(arvore, &espacoVazio);
+                  //  ocorrenciasVocubulario = fopen(vocabulario[auxVocabulario], "w+");
+                    //Chamaremos a força bruta para buscar todas as ocorrencias da palavra
+                    forcaBruta(texto,quantidade,palavra,static_cast<long>(strlen(palavra)), ocorrencias, &posnovetor,
+                               i+1, &comparacoes);
+
+                    cout << "\n Ocorrencias: " << endl << endl;
+                    for (int i = 0; i < posnovetor; ++i) {
+                        cout << " Arquivo: " << ocorrencias[i].numArquivo
+                             << " | Posicao da ocorrencia: " << ocorrencias[i].posicao << endl;
+                        //fprintf(ocorrenciasVocubulario, "%d %d\n",ocorrencias[i].numArquivo, ocorrencias[i].posicao);
+                    }
+                    //fclose(ocorrenciasVocubulario);
+
+
+                }
+            }
+            flag++;
+
         }
+
+
 
         deletaTudo(arvore);
         break;
     case 2:
         cout << "\n __________________________________________________________";
         cout << "\n Forca Bruta \n" << endl;
-        tempoInicial = clock();
+
         t1 = high_resolution_clock::now();
-        for (int i = 0; i < qtdarquivos; ++i) {
+        for (int i = 0; i < qtdarquivos/100; ++i) {
             colecao = fopen(nomes[i], "r");
-            int lido, qtd = 0; // qtd: define a quantidade de caracteres do texto. lido: caractere que foi lido.
+            int lido=0;
+            int qtd =0;// qtd: define a quantidade de caracteres do texto. lido: caractere que foi lido.
             while ((lido = getc(colecao)) != EOF) {
                 texto[qtd] = static_cast<char>(lido);
                 //cout<<texto[qtd]<<" | ";
                 qtd++;
             }
+
+
             /*
              * . Posnovetor  ->  quantidade de ocorrências encontradas.
              * . i+1         ->  define a numeração do arquivo.
@@ -174,7 +225,9 @@ int main(int argc, char *argv[])
             forcaBruta(texto, qtd, execucao.padrao, static_cast<long>(strlen(execucao.padrao)), ocorrencias, &posnovetor, i+1, &comparacoes);
 
         }
-        tempoFinal = clock();
+
+
+
         t2 = high_resolution_clock::now();
         total_time = duration_cast<duration<double>>(t2-t1);
 

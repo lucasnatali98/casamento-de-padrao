@@ -36,9 +36,4 @@ void criaNomesVocabulario(char vocabulario[100000][20], int posicao)
     cout<<endl;
 }
 
-short geraArquivoInvertido(FILE* colecao)
-{
 
-   colecao = fopen("0001.txt", "r");
-
-}

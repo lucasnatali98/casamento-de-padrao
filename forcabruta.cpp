@@ -5,6 +5,8 @@ void forcaBruta(char *texto, long n, char padrao[], long m, Ocorrencia* o, int* 
 {
     //m = tamanho do padrão
     //n = tamanho do texto
+
+
     long i,j,k;
 
 
@@ -28,5 +30,6 @@ void forcaBruta(char *texto, long n, char padrao[], long m, Ocorrencia* o, int* 
             *posnovetor += 1;
         }
     }
+
 
 }
